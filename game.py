@@ -58,6 +58,9 @@ class Game(Singleton):
     move_down        = bind_func(self.move, tetrimino=self.tetrimino, x=0, y=1)
     fast_place_piece = bind_func(self.fast_place, self.tetrimino)
 
+    self.elements['Input'].bind_key(pygame.K_e, rotate_right, KeyListener.ONPRESS)
+    self.elements['Input'].bind_key(pygame.K_q, rotate_left,  KeyListener.ONPRESS)
+
     self.elements['Input'].bind_key(pygame.K_d, move_right,   KeyListener.ONPRESS)
     self.elements['Input'].bind_key(pygame.K_a, move_left,    KeyListener.ONPRESS)
     self.elements['Input'].bind_key(pygame.K_s, move_down,    KeyListener.ONPRESS)
@@ -96,10 +99,22 @@ class Game(Singleton):
 
     # rendering ----------------------------------------------------------------
 
+    # render bloc
+    self.elements['Render'].drawf(self.tetrimino.field_render, self.field_render_ref, self.cell_size)
+
+    # render field
+    self.elements['Render'].drawf(self.draw_grid)
+
+    # render next state
+    self.elements['Render'].drawf(self.next_state.basic_render, (600, 50), self.cell_size)
+
+    # render score
+
+    self.elements['Render'].draw(self.font.render(str(self.score), False, (255, 255, 255), self.elements['Window'].bg_color), (100, 50))
+
     # default rendering business
     self.elements['Render'].render({DEFAULT:self.elements['Window'].window})
     self.elements['Window'].update()
-
 
   def tetris_loop(self) -> None:
     # fix tetrimino position
